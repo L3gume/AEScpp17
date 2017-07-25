@@ -88,7 +88,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 	return true; // return the success status. (the method might end up being void)
 }
 
-inline void Encryptor::subBytes() {
+/*inline*/ void Encryptor::subBytes() {
 	for (auto iter: message) {
 		for (int i = 0; i < 16; i++) {
 			iter->state[0][i] = tableLookup(iter->state[0][i], false);
@@ -96,7 +96,7 @@ inline void Encryptor::subBytes() {
 	}
 }
 
-inline void Encryptor::shiftRows() {
+/*inline*/ void Encryptor::shiftRows() {
 	unsigned char temp;
 	for (auto iter: message) {
 		temp = iter->state[1][0];
@@ -121,7 +121,7 @@ inline void Encryptor::shiftRows() {
 	}
 }
 
-inline void Encryptor::mixColumns() {
+/*inline*/ void Encryptor::mixColumns() {
 	/*
 	|s'1| = |2	3	1	1| |s1|
 	|s'2|   |1	2	3	1| |s2|
@@ -146,7 +146,7 @@ inline void Encryptor::mixColumns() {
 	}
 }
 
-inline void Encryptor::invSubBytes() {
+/*inline*/ void Encryptor::invSubBytes() {
 	for (auto iter: message) {
 		for (int i = 0; i < 16; i++) {
 			iter->state[0][i] = tableLookup(iter->state[0][i], true);
@@ -154,7 +154,7 @@ inline void Encryptor::invSubBytes() {
 	}
 }
 
-inline void Encryptor::invShiftRows() {
+/*inline*/ void Encryptor::invShiftRows() {
 	unsigned char temp;
 	for (auto iter: message) {
 		temp = iter->state[1][3];
@@ -179,7 +179,7 @@ inline void Encryptor::invShiftRows() {
 	}
 }
 
-inline void Encryptor::invMixColumns() {
+/*inline*/ void Encryptor::invMixColumns() {
 	/*
     |s'1| = |0e	0b	0d	09| |s1|
     |s'2|   |09	0e	0b	0d| |s2|
@@ -250,4 +250,8 @@ void Encryptor::printStringFromDeque(bool isKey) {
             ret += "\n";
     }
     std::cout << ret << "\n";
+}
+
+void Encryptor::printMessage() {
+    printStringFromDeque(false);
 }
