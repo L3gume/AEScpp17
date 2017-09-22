@@ -94,6 +94,6 @@ inline unsigned char galloisMult(unsigned char a, unsigned char b) {
 
 unsigned char tableLookup(unsigned char c, bool isInverse);
 
-std::string readFile(int& nb_lines);
+std::string readFile(std::string s, int& nb_lines);
 
 #endif

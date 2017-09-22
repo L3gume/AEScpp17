@@ -7,33 +7,49 @@
 #include <iostream>
 #include <vector>
 #include "Encryptor.h"
+#include "AESUtils.h"
 
 class Controller {
 public:
     Controller();
     ~Controller();
 
-    void setEncrytor(Encryptor* enc) { en = enc; };
     void start();
 private:
-    Encryptor* en;
+    void init();
+    static Encryptor en;
     std::string outputDir;
     bool verbose;
 
     void process();
     void parseCommand(std::vector<std::string> &in);
     std::vector<std::string> getInput();
-    bool clearKey();
-    bool setKey();
-    bool setMessage(int mode); // 0: raw text, 1: file
-    bool getMessage();
-    bool clearMessage();
-    bool setOutputDir();
-    void encrypt();
+    // command methods
+    static bool clearKey(std::vector<std::string>& args);
+    static bool setKey(std::vector<std::string>& args);
+    static bool setMessage(std::vector<std::string>& args); // 0: raw text, 1: file
+    static bool getMessage(std::vector<std::string>& args);
+    static bool clearMessage(std::vector<std::string>& args);
+    static bool setOutputDir(std::vector<std::string>& args);
+    static void encrypt(std::vector<std::string>& args);
+    static void decrypt(std::vector<std::string>& args);
     // Printing methods
-    void printHeader();
-    void printHelp();
+    static void printHeader();
+    static void printHelp(std::vector<std::string>& args);
     void printMessage();
+
+    // TODO: implement a way to read multiple options after a single '-' ex: '-rv' instead of '-r -v' (read from file + verbose)
+
+    typedef void (*commandFunction)(std::vector<std::string>&);
+
+    struct Command {
+        Command() : name(""), func(nullptr){};
+        Command(std::string n, commandFunction f) : name(n), func(f) {};
+        std::string name;
+        commandFunction func;
+    };
+
+    std::vector<Command> commands;
 };
 
 #endif //AES_CONTROLLER_H

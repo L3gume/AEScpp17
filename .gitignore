@@ -1,0 +1,11 @@
+*.make
+*.cmake
+*.txt
+*.o
+*.includecache
+cmake-build-*/
+*.xml
+*.iml
+*.cbp
+*.internal
+.idea/

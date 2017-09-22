@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     cout << "Computed 10 subkeys in: " << elapsed_seconds.count() << "s\n";
 
     start = chrono::high_resolution_clock::now();
-    text = readFile(nb_lines);
+    text = readFile("", nb_lines);
     end = chrono::high_resolution_clock::now();
     elapsed_seconds = end-start;
     cout << "Read file in: " << elapsed_seconds.count() << "s\n";
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     cout << "Converted "<< nb_lines <<" lines of text into "<< nb_blocks <<" blocks in: " << elapsed_seconds.count() << "s\n";
     cout << "Total message length: " << nb_blocks * 16 << " characters." << "\n";
 
-    /*start = chrono::high_resolution_clock::now();
+    start = chrono::high_resolution_clock::now();
     en.encrypt(text, false);
     end = chrono::high_resolution_clock::now();
     elapsed_seconds = end-start;
@@ -43,9 +43,8 @@ int main(int argc, char* argv[]) {
     en.decrypt("", false);
     end = chrono::high_resolution_clock::now();
     elapsed_seconds = end-start;
-    cout << "Decrypted the message in: " << elapsed_seconds.count() << "s\n";*/
+    cout << "Decrypted the message in: " << elapsed_seconds.count() << "s\n";
 
-    controller.setEncrytor(&en);
     controller.start();
 	return 0;
 }
