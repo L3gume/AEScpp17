@@ -25,12 +25,12 @@ private:
     void parseCommand(std::vector<std::string> &in);
     std::vector<std::string> getInput();
     // command methods
-    static bool clearKey(std::vector<std::string>& args);
-    static bool setKey(std::vector<std::string>& args);
-    static bool setMessage(std::vector<std::string>& args); // 0: raw text, 1: file
-    static bool getMessage(std::vector<std::string>& args);
-    static bool clearMessage(std::vector<std::string>& args);
-    static bool setOutputDir(std::vector<std::string>& args);
+    static void clearKey(std::vector<std::string>& args);
+    static void setKey(std::vector<std::string>& args);
+    static void setMessage(std::vector<std::string>& args); // 0: raw text, 1: file
+    static void getMessage(std::vector<std::string>& args);
+    static void clearMessage(std::vector<std::string>& args);
+    static void setOutputDir(std::vector<std::string>& args);
     static void encrypt(std::vector<std::string>& args);
     static void decrypt(std::vector<std::string>& args);
     // Printing methods

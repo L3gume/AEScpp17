@@ -17,8 +17,12 @@ Controller::~Controller() {}
 void Controller::init() {
     Command helpcom("help", printHelp);
     Command enccom("encrypt", encrypt);
+    Command deccom("decrypt", decrypt);
+    Command setkey("setkey", setKey);
     commands.push_back(helpcom);
     commands.push_back(enccom);
+    commands.push_back(deccom);
+    commands.push_back(setkey);
 }
 
 void Controller::start() {
@@ -150,7 +154,7 @@ void Controller::encrypt(std::vector<std::string>& args) {
 
     if (readFromFile) {
         message = readFile(message, nb_lines);
-        if (message != nullptr) {
+        if (!message.empty()) {
             en.parseString(message, false, nb_blocks);
             en.encrypt("", verbose);
         } else {
@@ -158,7 +162,7 @@ void Controller::encrypt(std::vector<std::string>& args) {
             return;
         }
     } else if (rawText) {
-        if (message != nullptr) {
+        if (!message.empty()) {
             en.encrypt(message, verbose);
         } else {
             std::cout << "No message to encrypt!" << '\n';
@@ -166,4 +170,38 @@ void Controller::encrypt(std::vector<std::string>& args) {
         }
 
     }
+}
+
+void Controller::setKey(std::vector<std::string> &args) {
+    std::string key;
+    bool gen_rand = false;
+    bool use_arg = false;
+    bool success = false;
+
+    for (auto s : args) {
+        if (s != args.at(0)) {
+            if (s == "-r" || s == "--random") {
+                gen_rand = true;
+                // Generate random key
+            } else {
+                key = s;
+                use_arg = true;
+            }
+        }
+    }
+
+    if (gen_rand != !use_arg) {
+        std::cout << "Can't use the input key and generate a random one, make up your mind!" << '\n';
+        return;
+    }
+
+    if (use_arg) {
+        en.setKey(key);
+    } else if (gen_rand) {
+        //...
+    }
+}
+
+void Controller::decrypt(std::vector<std::string> &args) {
+
 }
