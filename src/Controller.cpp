@@ -6,6 +6,12 @@
 #include <algorithm>
 #include "Controller.h"
 
+// TODO: DUMB IDEA HUEHUEHUE
+// Have a constexpr dictionary of command help messages
+// So whenever the --help option is passed to a command,
+// the help message has been fetched at compile time and is ready
+// to be displayed
+
 Encryptor Controller::en;
 
 Controller::Controller(): outputDir(""), verbose(false) {
@@ -172,6 +178,65 @@ void Controller::encrypt(std::vector<std::string>& args) {
     }
 }
 
+void Controller::decrypt(std::vector<std::string> &args) {
+    bool verbose = false;
+    bool readFromFile = false;
+    bool rawText = false;
+    bool useBuffer = false;
+    std::string message;
+
+    int nb_lines = 0;
+    int nb_blocks = 0;
+
+    for (auto s : args) {
+        if (s != args.at(0)) {
+            if (s == "-v" || s == "--verbose") {
+                verbose = true;
+            } else if (s == "-f" || s == "--file") {
+                readFromFile = true;
+            } else if (s == "-r" || s == "--rawtext") {
+                rawText = true;
+            } else if (s == "-b" || s == "--buffer") {
+                useBuffer = true;
+                readFromFile = false;
+                rawText = false;
+            } else {
+                message = s;
+            }
+        }
+    }
+
+    // Not too sure about that one
+    /*if (!s) {
+        std::cout << "No message or file to encrypt!" << '\n';
+        return;
+    }*/
+
+    if ((readFromFile != !rawText) && !useBuffer) {
+        std::cout << "Can't use raw text and read from file at the same time!" << '\n';
+        return;
+    }
+
+    if (readFromFile) {
+        message = readFile(message, nb_lines);
+        if (!message.empty()) {
+            en.parseString(message, false, nb_blocks);
+            en.decrypt("", verbose);
+        } else {
+            std::cout << "No file to encrypt!" << '\n';
+            return;
+        }
+    } else if (rawText) {
+        if (!message.empty()) {
+            en.decrypt(message, verbose);
+        } else {
+            std::cout << "No message to encrypt!" << '\n';
+            return;
+        }
+
+    }
+}
+
 void Controller::setKey(std::vector<std::string> &args) {
     std::string key;
     bool gen_rand = false;
@@ -200,8 +265,4 @@ void Controller::setKey(std::vector<std::string> &args) {
     } else if (gen_rand) {
         //...
     }
-}
-
-void Controller::decrypt(std::vector<std::string> &args) {
-
 }
