@@ -77,6 +77,8 @@ void Controller::parseCommand(std::vector<std::string> &in) {
         printMessage();
     } else if (commandName == "clear") {
         std::cout << std::string( 100, '\n' ); // lol
+    } else if (commandName == "exit") {
+        std::cout << "See ya!" << '\n';
     } else {
         auto command = std::find_if(commands.begin(), commands.end(),
                                     [commandName](const Command& c){ return c.name == commandName; });

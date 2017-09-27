@@ -5,7 +5,7 @@
 
 using namespace std; // necessary? probly not.
 
-int main(int argc, char* argv[]) {
+int main() {
     Controller controller;
     chrono::time_point<chrono::high_resolution_clock> start, end;
     chrono::duration<double> elapsed_seconds;
