@@ -33,11 +33,13 @@ void Encryptor::decrypt(std::string s, bool verbose) {
         std::cout << s << "\n";
         parseString(s, false);
     }*/
-    if (verbose)
+    if (verbose) {
         std::cout << "Decrypt:\n" << "\n";
+    }
 	addRoundKey(i--);
-    if (verbose)
+    if (verbose) {
         printStringFromDeque(false);
+    }
     while (i > 0) {
         invShiftRows();
         invSubBytes();
@@ -49,8 +51,9 @@ void Encryptor::decrypt(std::string s, bool verbose) {
     invShiftRows();
 	invSubBytes();
 	addRoundKey(i); // i should be 0
-    if (verbose)
+    if (verbose) {
         printStringFromDeque(false);
+    }
 }
 
 bool Encryptor::setKey(std::string new_key) {
@@ -254,4 +257,8 @@ void Encryptor::printStringFromDeque(bool isKey) {
 
 void Encryptor::printMessage() {
     printStringFromDeque(false);
+}
+
+std::deque<Block*> Encryptor::getMessage() {
+    return message;
 }

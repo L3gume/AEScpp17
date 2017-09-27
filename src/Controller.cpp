@@ -25,10 +25,12 @@ void Controller::init() {
     Command enccom("encrypt", encrypt);
     Command deccom("decrypt", decrypt);
     Command setkey("setkey", setKey);
+    Command getkey("getkey", getKey);
     commands.push_back(helpcom);
     commands.push_back(enccom);
     commands.push_back(deccom);
     commands.push_back(setkey);
+    commands.push_back(getkey);
 }
 
 void Controller::start() {
@@ -235,7 +237,13 @@ void Controller::decrypt(std::vector<std::string> &args) {
             std::cout << "No message to encrypt!" << '\n';
             return;
         }
-
+    } else if (useBuffer) {
+        if (!en.getMessage().empty()) {
+            en.decrypt("", verbose);
+        } else {
+            std::cout << "No message loaded!" << '\n';
+            return;
+        }
     }
 }
 
@@ -267,4 +275,8 @@ void Controller::setKey(std::vector<std::string> &args) {
     } else if (gen_rand) {
         //...
     }
+}
+
+void Controller::getKey(std::vector<std::string> &args) {
+    en.printStringFromDeque(true);
 }

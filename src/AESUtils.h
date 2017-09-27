@@ -73,6 +73,14 @@ struct Block {
         }
     }
 
+    std::string toString() {
+        std::string ret = "";
+        for (int i = 0; i < 16; i++) {
+            ret += state[0][i];
+        }
+        return ret;
+    }
+
 	unsigned char state[4][4];
 };
 

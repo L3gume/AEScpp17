@@ -12,9 +12,8 @@ int main() {
     int nb_lines, nb_blocks;
     string text;
 
-	/*
 	// Lets do the aes implementation for real.
-	Encryptor en /*= new Encryptor();
+	/*Encryptor en;
     start = chrono::high_resolution_clock::now();
     en.setKey("abcdefghijklmnop");
     end = chrono::high_resolution_clock::now();
@@ -46,7 +45,6 @@ int main() {
     elapsed_seconds = end-start;
     cout << "Decrypted the message in: " << elapsed_seconds.count() << "s\n";
     */
-
     controller.start(); // huehue
 	return 0;
 }

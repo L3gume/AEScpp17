@@ -25,6 +25,7 @@ public:
 	std::string getKey();
     bool parseString(std::string s, bool isKey, int& n);
     void printMessage();
+    std::deque<Block*> getMessage();
 private:
 	std::string key_string;
 	int rounds = 10; // will change eventually
