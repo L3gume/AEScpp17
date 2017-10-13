@@ -67,7 +67,7 @@ bool Encryptor::setKey(std::string new_key) {
 bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 	int nbBlocks = 0;
 	unsigned char temp[16];
-	std::deque<std::shared_ptr<Block>> *p = isKey ? &key : &message; // get the reference to either the message of the key.
+	std::deque<Block> *p = isKey ? &key : &message; // get the reference to either the message of the key.
     p->clear(); // empty the key/message.
 	std::deque<unsigned char> bytes(s.begin(), s.end()); // convert the string to an unsigned char queue.
 	nbBlocks = (bytes.size() % 16 == 0) ? static_cast<int>(bytes.size()/16) : static_cast<int>((bytes.size()/16) + 1);
@@ -81,7 +81,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 				temp[i] = 0x00;
 			}
 		}
-		(*p).push_back(std::make_shared<Block>(temp)); // Push the block
+		(*p).push_back(Block(temp)); // Push the block
 	}
 	return true; // return the success status. (the method might end up being void)
 }
@@ -89,7 +89,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 /*inline*/ void Encryptor::subBytes() {
 	for (auto iter: message) {
 		for (int i = 0; i < 16; i++) {
-			iter->state[0][i] = tableLookup(iter->state[0][i], false);
+			iter.state[0][i] = tableLookup(iter.state[0][i], false);
 		}
 	}
 }
@@ -97,24 +97,24 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 /*inline*/ void Encryptor::shiftRows() {
 	unsigned char temp;
 	for (auto iter: message) {
-		temp = iter->state[1][0];
-		iter->state[1][0] = iter->state[1][1];
-		iter->state[1][1] = iter->state[1][2];
-		iter->state[1][2] = iter->state[1][3];
-		iter->state[1][3] = temp;
+		temp = iter.state[1][0];
+		iter.state[1][0] = iter.state[1][1];
+		iter.state[1][1] = iter.state[1][2];
+		iter.state[1][2] = iter.state[1][3];
+		iter.state[1][3] = temp;
 		for (int i = 0; i < 2; i++) {
-			temp = iter->state[2][0];
-			iter->state[2][0] = iter->state[2][1];
-			iter->state[2][1] = iter->state[2][2];
-			iter->state[2][2] = iter->state[2][3];
-			iter->state[2][3] = temp;
+			temp = iter.state[2][0];
+			iter.state[2][0] = iter.state[2][1];
+			iter.state[2][1] = iter.state[2][2];
+			iter.state[2][2] = iter.state[2][3];
+			iter.state[2][3] = temp;
 		}
 		for (int i = 0; i < 3; i++) {
-			temp = iter->state[3][0];
-			iter->state[3][0] = iter->state[3][1];
-			iter->state[3][1] = iter->state[3][2];
-			iter->state[3][2] = iter->state[3][3];
-			iter->state[3][3] = temp;
+			temp = iter.state[3][0];
+			iter.state[3][0] = iter.state[3][1];
+			iter.state[3][1] = iter.state[3][2];
+			iter.state[3][2] = iter.state[3][3];
+			iter.state[3][3] = temp;
 		}
 	}
 }
@@ -133,13 +133,13 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 		for (int i = 0; i < 4; i++) {
 
             for (int j = 0; j < 4; j++) {
-                tmp[j] = iter->state[j][i];
+                tmp[j] = iter.state[j][i];
             }
 
-			iter->state[0][i] = galloisMult(tmp[0], 0x02) ^ galloisMult(tmp[1], 0x03) ^ tmp[2] ^ tmp[3];
-			iter->state[1][i] = tmp[0] ^ galloisMult(tmp[1], 0x02) ^ galloisMult(tmp[2], 0x03) ^ tmp[3];
-			iter->state[2][i] = tmp[0] ^ tmp[1] ^ galloisMult(tmp[2], 0x02) ^ galloisMult(tmp[3], 0x03);
-			iter->state[3][i] = galloisMult(tmp[0], 0x03) ^ tmp[1] ^ tmp[2] ^ galloisMult(tmp[3], 0x02);
+			iter.state[0][i] = galloisMult(tmp[0], 0x02) ^ galloisMult(tmp[1], 0x03) ^ tmp[2] ^ tmp[3];
+			iter.state[1][i] = tmp[0] ^ galloisMult(tmp[1], 0x02) ^ galloisMult(tmp[2], 0x03) ^ tmp[3];
+			iter.state[2][i] = tmp[0] ^ tmp[1] ^ galloisMult(tmp[2], 0x02) ^ galloisMult(tmp[3], 0x03);
+			iter.state[3][i] = galloisMult(tmp[0], 0x03) ^ tmp[1] ^ tmp[2] ^ galloisMult(tmp[3], 0x02);
 		}
 	}
 }
@@ -147,7 +147,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 /*inline*/ void Encryptor::invSubBytes() {
 	for (auto iter: message) {
 		for (int i = 0; i < 16; i++) {
-			iter->state[0][i] = tableLookup(iter->state[0][i], true);
+			iter.state[0][i] = tableLookup(iter.state[0][i], true);
 		}
 	}
 }
@@ -155,24 +155,24 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 /*inline*/ void Encryptor::invShiftRows() {
 	unsigned char temp;
 	for (auto iter: message) {
-		temp = iter->state[1][3];
-		iter->state[1][3] = iter->state[1][2];
-		iter->state[1][2] = iter->state[1][1];
-		iter->state[1][1] = iter->state[1][0];
-		iter->state[1][0] = temp;
+		temp = iter.state[1][3];
+		iter.state[1][3] = iter.state[1][2];
+		iter.state[1][2] = iter.state[1][1];
+		iter.state[1][1] = iter.state[1][0];
+		iter.state[1][0] = temp;
 		for (int i = 0; i < 2; i++) {
-			temp = iter->state[2][3];
-			iter->state[2][3] = iter->state[2][2];
-			iter->state[2][2] = iter->state[2][1];
-			iter->state[2][1] = iter->state[2][0];
-			iter->state[2][0] = temp;
+			temp = iter.state[2][3];
+			iter.state[2][3] = iter.state[2][2];
+			iter.state[2][2] = iter.state[2][1];
+			iter.state[2][1] = iter.state[2][0];
+			iter.state[2][0] = temp;
 		}
 		for (int i = 0; i < 3; i++) {
-			temp = iter->state[3][3];
-			iter->state[3][3] = iter->state[3][2];
-			iter->state[3][2] = iter->state[3][1];
-			iter->state[3][1] = iter->state[3][0];
-			iter->state[3][0] = temp;
+			temp = iter.state[3][3];
+			iter.state[3][3] = iter.state[3][2];
+			iter.state[3][2] = iter.state[3][1];
+			iter.state[3][1] = iter.state[3][0];
+			iter.state[3][0] = temp;
 		}
 	}
 }
@@ -191,13 +191,13 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 		for (int i = 0; i < 4; i++) {
 
             for (int j = 0; j < 4; j++) {
-                tmp[j] = iter->state[j][i];
+                tmp[j] = iter.state[j][i];
             }
 
-			iter->state[0][i] = galloisMult(tmp[0], 0x0e) ^ galloisMult(tmp[1], 0x0b) ^ galloisMult(tmp[2], 0x0d) ^ galloisMult(tmp[3], 0x09);
-			iter->state[1][i] = galloisMult(tmp[0], 0x09) ^ galloisMult(tmp[1], 0x0e) ^ galloisMult(tmp[2], 0x0b) ^ galloisMult(tmp[3], 0x0d);
-			iter->state[2][i] = galloisMult(tmp[0], 0x0d) ^ galloisMult(tmp[1], 0x09) ^ galloisMult(tmp[2], 0x0e) ^ galloisMult(tmp[3], 0x0b);
-			iter->state[3][i] = galloisMult(tmp[0], 0x0b) ^ galloisMult(tmp[1], 0x0d) ^ galloisMult(tmp[2], 0x09) ^ galloisMult(tmp[3], 0x0e);
+			iter.state[0][i] = galloisMult(tmp[0], 0x0e) ^ galloisMult(tmp[1], 0x0b) ^ galloisMult(tmp[2], 0x0d) ^ galloisMult(tmp[3], 0x09);
+			iter.state[1][i] = galloisMult(tmp[0], 0x09) ^ galloisMult(tmp[1], 0x0e) ^ galloisMult(tmp[2], 0x0b) ^ galloisMult(tmp[3], 0x0d);
+			iter.state[2][i] = galloisMult(tmp[0], 0x0d) ^ galloisMult(tmp[1], 0x09) ^ galloisMult(tmp[2], 0x0e) ^ galloisMult(tmp[3], 0x0b);
+			iter.state[3][i] = galloisMult(tmp[0], 0x0b) ^ galloisMult(tmp[1], 0x0d) ^ galloisMult(tmp[2], 0x09) ^ galloisMult(tmp[3], 0x0e);
 		}
 	}
 }
@@ -206,15 +206,15 @@ bool Encryptor::generateSubKeys() {
 	unsigned char col4PrevKey[4];
 	unsigned char newKey[4][4];
 
-	if (!key.at(0)) // If the starting key wasn't parsed correctly.
+	/*if (!key.at(0)) // If the starting key wasn't parsed correctly.
 		return false;
-
+    */
 	for (int i = 1; i <= rounds; i++) {
 		// Column rotation
-		col4PrevKey[0] = key[i-1]->state[3][1];
-		col4PrevKey[1] = key[i-1]->state[3][2];
-		col4PrevKey[2] = key[i-1]->state[3][3];
-		col4PrevKey[3] = key[i-1]->state[3][0];
+		col4PrevKey[0] = key[i-1].state[3][1];
+		col4PrevKey[1] = key[i-1].state[3][2];
+		col4PrevKey[2] = key[i-1].state[3][3];
+		col4PrevKey[3] = key[i-1].state[3][0];
 		// table lookup on the column.
 		for (int j = 0; j < 4; j++) {
 			col4PrevKey[j] = tableLookup(col4PrevKey[j], false);
@@ -223,14 +223,14 @@ bool Encryptor::generateSubKeys() {
 			for (int k = 0; k < 4; k++) {
 				if (j == 0) {
 					col4PrevKey[k] = col4PrevKey[k] ^ rcon[k][i - 1];
-					col4PrevKey[k] = key[i-1]->state[j][k] ^ col4PrevKey[k];
+					col4PrevKey[k] = key[i-1].state[j][k] ^ col4PrevKey[k];
 				} else {
-					col4PrevKey[k] = key[i-1]->state[j][k] ^ col4PrevKey[k];
+					col4PrevKey[k] = key[i-1].state[j][k] ^ col4PrevKey[k];
 				}
 				newKey[j][k] = col4PrevKey[k];
 			}
 		}
-		key.push_back(std::make_shared<Block>(newKey));
+		key.push_back(Block(newKey));
 	}
     std::cout << "Key expansion:" << "\n";
     printStringFromDeque(true);
@@ -238,10 +238,10 @@ bool Encryptor::generateSubKeys() {
 }
 
 void Encryptor::printStringFromDeque(bool isKey) {
-    std::deque<std::shared_ptr<Block>> *p = isKey ? &key : &message;
+    std::deque<Block> *p = isKey ? &key : &message;
     std::string ret = "";
     for (auto iter: *p) {
-        ret += iter->toString();
+        ret += iter.toString();
         if (isKey)
             ret += "\n";
     }
@@ -252,6 +252,6 @@ void Encryptor::printMessage() {
     printStringFromDeque(false);
 }
 
-std::deque<std::shared_ptr<Block>> Encryptor::getMessage() {
+std::deque<Block> Encryptor::getMessage() {
     return message;
 }

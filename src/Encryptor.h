@@ -26,13 +26,13 @@ public:
 	std::string getKey();
     bool parseString(std::string s, bool isKey, int& n);
     void printMessage();
-    std::deque<std::shared_ptr<Block>> getMessage();
+    std::deque<Block> getMessage();
 private:
 	std::string key_string;
 
 	const int rounds = 10; // will change eventually
-	std::deque<std::shared_ptr<Block>> message;
-	std::deque<std::shared_ptr<Block>> key;
+	std::deque<Block> message;
+	std::deque<Block> key;
 	std::string generateRandomKey(); // Will require libSodium or another external library for good random numbers.
 	// inline all the things!
 	// operations.
@@ -48,7 +48,7 @@ private:
 	// addRoundKey is just a XOR, which is its own inverse.
 	inline void addRoundKey(unsigned int round) {
 		for (auto value: message) {
-            *value ^= *key[round]; // Overloaded operator^=, because I can.
+            value ^= key[round]; // Overloaded operator^=, because I can.
 		}
 	}
 	bool generateSubKeys();
