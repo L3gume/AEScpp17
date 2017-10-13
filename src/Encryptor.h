@@ -27,12 +27,14 @@ public:
     void printMessage();
 private:
 	std::string key_string;
-	int rounds = 10; // will change eventually
+	const int rounds = 10; // will change eventually
 	std::deque<Block*> message;
 	std::deque<Block*> key;
 	std::string generateRandomKey(); // Will require libSodium or another external library for good random numbers.
 	// inline all the things!
 	// operations.
+
+    // turns out inlining these methods doesn't really make anything faster.
 	/*inline*/ void subBytes();
     /*inline*/ void shiftRows();
     /*inline*/ void mixColumns();
