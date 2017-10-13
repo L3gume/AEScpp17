@@ -74,7 +74,7 @@ struct Block {
     void operator^=(const Block& other) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                this->state[i][j] = this->state[i][j] ^ other.state[i][j];
+                state[i][j] = state[i][j] ^ other.state[i][j];
             }
         }
     }
@@ -99,7 +99,7 @@ inline unsigned char galloisMult(unsigned char a, unsigned char b) {
 	for (counter = 0; counter < 8; counter++) {
 		if ((b & 1) == 1)
 			p ^= a;
-		hi_bit_set = (a & 0x80);
+		hi_bit_set = (unsigned char)(a & 0x80);
 		a <<= 1;
 		if (hi_bit_set == 0x80)
 			a ^= 0x1b;

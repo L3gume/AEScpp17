@@ -40,7 +40,7 @@ int main() {
     cout << "Encrypted the message in: " << elapsed_seconds.count() << "s\n";
 
     start = chrono::high_resolution_clock::now();
-    en.decrypt("", false);
+    en.decrypt("", true);
     end = chrono::high_resolution_clock::now();
     elapsed_seconds = end-start;
     cout << "Decrypted the message in: " << elapsed_seconds.count() << "s\n";

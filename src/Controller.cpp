@@ -251,7 +251,6 @@ void Controller::setKey(std::vector<std::string> &args) {
     std::string key;
     bool gen_rand = false;
     bool use_arg = false;
-    bool success = false;
 
     for (auto s : args) {
         if (s != args.at(0)) {

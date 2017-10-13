@@ -133,7 +133,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 
     unsigned char tmp[4];
 
-	for (auto iter: message) {
+	for (auto& iter: message) {
 		for (int i = 0; i < 4; i++) {
 
             for (int j = 0; j < 4; j++) {

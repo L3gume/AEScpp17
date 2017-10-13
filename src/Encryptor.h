@@ -4,7 +4,6 @@
 #include <deque>
 #include <string>
 #include "AESUtils.h"
-#include <memory>
 
 class Encryptor {
 public:
