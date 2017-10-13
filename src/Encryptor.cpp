@@ -89,7 +89,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 }
 
 /*inline*/ void Encryptor::subBytes() {
-	for (auto iter: message) {
+	for (auto& iter: message) {
 		for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 iter.state[i][j] = tableLookup(iter.state[i][j], false);
@@ -100,7 +100,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 
 /*inline*/ void Encryptor::shiftRows() {
 	unsigned char temp;
-	for (auto iter: message) {
+	for (auto& iter: message) {
 		temp = iter.state[1][0];
 		iter.state[1][0] = iter.state[1][1];
 		iter.state[1][1] = iter.state[1][2];
@@ -149,7 +149,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 }
 
 /*inline*/ void Encryptor::invSubBytes() {
-	for (auto iter: message) {
+	for (auto& iter: message) {
 		for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 iter.state[i][j] = tableLookup(iter.state[i][j], true);
@@ -160,7 +160,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 
 /*inline*/ void Encryptor::invShiftRows() {
 	unsigned char temp;
-	for (auto iter: message) {
+	for (auto& iter: message) {
 		temp = iter.state[1][3];
 		iter.state[1][3] = iter.state[1][2];
 		iter.state[1][2] = iter.state[1][1];
@@ -193,7 +193,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 
     unsigned char tmp[4];
 
-	for (auto iter: message) {
+	for (auto& iter: message) {
 		for (int i = 0; i < 4; i++) {
 
             for (int j = 0; j < 4; j++) {

@@ -47,7 +47,7 @@ private:
     /*inline*/ void invMixColumns();
 	// addRoundKey is just a XOR, which is its own inverse.
 	inline void addRoundKey(unsigned int round) {
-		for (auto value: message) {
+		for (auto& value: message) {
             value ^= key[round]; // Overloaded operator^=, because I can.
 		}
 	}
