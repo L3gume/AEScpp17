@@ -6,7 +6,7 @@
 #include <algorithm>
 #include "Controller.h"
 
-// TODO: DUMB IDEA HUEHUEHUE
+// TODO: DUMB IDEA HEHE
 // Have a constexpr dictionary of command help messages
 // So whenever the --help option is passed to a command,
 // the help message has been fetched at compile time and is ready
@@ -25,10 +25,12 @@ void Controller::init() {
     Command enccom("encrypt", encrypt);
     Command deccom("decrypt", decrypt);
     Command setkey("setkey", setKey);
+    Command getkey("getkey", getKey);
     commands.push_back(helpcom);
     commands.push_back(enccom);
     commands.push_back(deccom);
     commands.push_back(setkey);
+    commands.push_back(getkey);
 }
 
 void Controller::start() {
@@ -77,6 +79,8 @@ void Controller::parseCommand(std::vector<std::string> &in) {
         printMessage();
     } else if (commandName == "clear") {
         std::cout << std::string( 100, '\n' ); // lol
+    } else if (commandName == "exit") {
+        std::cout << "See ya!" << '\n';
     } else {
         auto command = std::find_if(commands.begin(), commands.end(),
                                     [commandName](const Command& c){ return c.name == commandName; });
@@ -233,7 +237,13 @@ void Controller::decrypt(std::vector<std::string> &args) {
             std::cout << "No message to encrypt!" << '\n';
             return;
         }
-
+    } else if (useBuffer) {
+        if (!en.getMessage().empty()) {
+            en.decrypt("", verbose);
+        } else {
+            std::cout << "No message loaded!" << '\n';
+            return;
+        }
     }
 }
 
@@ -265,4 +275,8 @@ void Controller::setKey(std::vector<std::string> &args) {
     } else if (gen_rand) {
         //...
     }
+}
+
+void Controller::getKey(std::vector<std::string> &args) {
+    en.printStringFromDeque(true);
 }

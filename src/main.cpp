@@ -5,16 +5,15 @@
 
 using namespace std; // necessary? probly not.
 
-int main(int argc, char* argv[]) {
+int main() {
     Controller controller;
     chrono::time_point<chrono::high_resolution_clock> start, end;
     chrono::duration<double> elapsed_seconds;
     int nb_lines, nb_blocks;
     string text;
 
-	/*
 	// Lets do the aes implementation for real.
-	Encryptor en /*= new Encryptor();
+	Encryptor en;
     start = chrono::high_resolution_clock::now();
     en.setKey("abcdefghijklmnop");
     end = chrono::high_resolution_clock::now();
@@ -45,7 +44,6 @@ int main(int argc, char* argv[]) {
     end = chrono::high_resolution_clock::now();
     elapsed_seconds = end-start;
     cout << "Decrypted the message in: " << elapsed_seconds.count() << "s\n";
-    */
 
     controller.start(); // huehue
 	return 0;

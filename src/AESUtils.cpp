@@ -6,7 +6,7 @@ unsigned char tableLookup(unsigned char c, bool isInverse) {
     unsigned char ret;
     std::string tmpChar;
     // Lambda expression! :D
-    auto convHex = [] (unsigned char c) {
+    auto convHex = [](unsigned char c) {
         std::string out = "";
         std::vector<unsigned char> mod;
         // use the modulo method to get a hexadecimal string.
@@ -37,12 +37,12 @@ unsigned char tableLookup(unsigned char c, bool isInverse) {
     return ret;
 }
 
-std::string readFile(std::string s, int& nb_lines) {
+std::string readFile(std::string s, int &nb_lines) {
     nb_lines = 0;
     std::string output = "";
     std::string line;
-    std::string filename = s != "" ? s : "/home/l3gume/Programming/AES/test2.txt";
-    std::ifstream file (filename);
+    std::string filename = s != "" ? s : "/home/notjustin/Projects/Personal/AES/AEScpp17/test2.txt";
+    std::ifstream file(filename);
     if (file.is_open()) {
         while (getline(file, line)) {
             output += line + "\n";

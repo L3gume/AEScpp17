@@ -4,40 +4,37 @@
 
 void Encryptor::encrypt(std::string s, bool verbose) {
 	unsigned int i = 0;
-    /*if (s != "") {
-        //std::cout << s << "\n";
-        parseString(s, false);
-    }*/
 	//begin
 	addRoundKey(i++);
-    if (verbose)
+    if (verbose) {
         printStringFromDeque(false);
+    }
 	while (i < rounds) {
 		subBytes();
 		shiftRows();
 		mixColumns();
 		addRoundKey(i++);
-        if (verbose)
+        if (verbose) {
             printStringFromDeque(false);
+        }
     }
 	subBytes();
 	shiftRows();
 	addRoundKey(i); // i should be 10
-    if (verbose)
+    if (verbose) {
         printStringFromDeque(false);
+    }
 }
 
 void Encryptor::decrypt(std::string s, bool verbose) {
 	unsigned int i = rounds;
-    /*if (s != "") {
-        std::cout << s << "\n";
-        parseString(s, false);
-    }*/
-    if (verbose)
+    if (verbose) {
         std::cout << "Decrypt:\n" << "\n";
+    }
 	addRoundKey(i--);
-    if (verbose)
+    if (verbose) {
         printStringFromDeque(false);
+    }
     while (i > 0) {
         invShiftRows();
         invSubBytes();
@@ -49,8 +46,9 @@ void Encryptor::decrypt(std::string s, bool verbose) {
     invShiftRows();
 	invSubBytes();
 	addRoundKey(i); // i should be 0
-    if (verbose)
+    if (verbose) {
         printStringFromDeque(false);
+    }
 }
 
 bool Encryptor::setKey(std::string new_key) {
@@ -69,7 +67,7 @@ bool Encryptor::setKey(std::string new_key) {
 bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 	int nbBlocks = 0;
 	unsigned char temp[16];
-	std::deque<Block*> *p = isKey ? &key : &message; // get the reference to either the message of the key.
+	std::deque<std::shared_ptr<Block>> *p = isKey ? &key : &message; // get the reference to either the message of the key.
     p->clear(); // empty the key/message.
 	std::deque<unsigned char> bytes(s.begin(), s.end()); // convert the string to an unsigned char queue.
 	nbBlocks = (bytes.size() % 16 == 0) ? static_cast<int>(bytes.size()/16) : static_cast<int>((bytes.size()/16) + 1);
@@ -83,7 +81,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 				temp[i] = 0x00;
 			}
 		}
-		(*p).push_back(new Block(temp)); // Push the block
+		(*p).push_back(std::make_shared<Block>(temp)); // Push the block
 	}
 	return true; // return the success status. (the method might end up being void)
 }
@@ -232,7 +230,7 @@ bool Encryptor::generateSubKeys() {
 				newKey[j][k] = col4PrevKey[k];
 			}
 		}
-		key.push_back(new Block(newKey));
+		key.push_back(std::make_shared<Block>(newKey));
 	}
     std::cout << "Key expansion:" << "\n";
     printStringFromDeque(true);
@@ -240,12 +238,10 @@ bool Encryptor::generateSubKeys() {
 }
 
 void Encryptor::printStringFromDeque(bool isKey) {
-    std::deque<Block*> *p = isKey ? &key : &message;
+    std::deque<std::shared_ptr<Block>> *p = isKey ? &key : &message;
     std::string ret = "";
     for (auto iter: *p) {
-        for (int i = 0; i < 16; i++) {
-            ret += iter->state[0][i];
-        }
+        ret += iter->toString();
         if (isKey)
             ret += "\n";
     }
@@ -254,4 +250,8 @@ void Encryptor::printStringFromDeque(bool isKey) {
 
 void Encryptor::printMessage() {
     printStringFromDeque(false);
+}
+
+std::deque<std::shared_ptr<Block>> Encryptor::getMessage() {
+    return message;
 }

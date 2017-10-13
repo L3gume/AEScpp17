@@ -27,6 +27,7 @@ private:
     // command methods
     static void clearKey(std::vector<std::string>& args);
     static void setKey(std::vector<std::string>& args);
+    static void getKey(std::vector<std::string> &args);
     static void setMessage(std::vector<std::string>& args); // 0: raw text, 1: file
     static void getMessage(std::vector<std::string>& args);
     static void clearMessage(std::vector<std::string>& args);

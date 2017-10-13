@@ -9,3 +9,8 @@ cmake-build-debug/
 *.cbp
 *.internal
 .idea/
+backup/
+*.sh
+build/
+Release/
+Debug/
