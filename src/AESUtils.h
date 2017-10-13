@@ -56,27 +56,35 @@ static const unsigned char rcon[4][10] =
 
 struct Block {
 	Block(unsigned char s[16]) {
-		for (int i = 0; i < 16; i++) {
-			state[0][i] = s[i];
+		for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                state[i][j] = s[i*4 + j];
+            }
 		}
 	}
 
     Block(unsigned char s[4][4]) {
-        for (int i = 0; i < 16; i++) {
-            state[0][i] = s[0][i];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                state[i][j] = s[i][j];
+            }
         }
     }
 
     void operator^=(const Block& other) {
-        for (int i = 0; i < 16; i++) {
-            this->state[0][i] = this->state[0][i] ^ other.state[0][i];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                this->state[i][j] = this->state[i][j] ^ other.state[i][j];
+            }
         }
     }
 
     std::string toString() {
         std::string ret = "";
-        for (int i = 0; i < 16; i++) {
-            ret += state[0][i];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                ret += state[i][j];
+            }
         }
         return ret;
     }

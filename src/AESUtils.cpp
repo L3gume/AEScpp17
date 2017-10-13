@@ -41,7 +41,7 @@ std::string readFile(std::string s, int &nb_lines) {
     nb_lines = 0;
     std::string output = "";
     std::string line;
-    std::string filename = s != "" ? s : "/home/notjustin/Projects/Personal/AES/AEScpp17/test2.txt";
+    std::string filename = s != "" ? s : "/home/l3gume/Programming/AES/test2.txt";
     std::ifstream file(filename);
     if (file.is_open()) {
         while (getline(file, line)) {

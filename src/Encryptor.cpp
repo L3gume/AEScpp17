@@ -67,6 +67,7 @@ bool Encryptor::setKey(std::string new_key) {
 bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 	int nbBlocks = 0;
 	unsigned char temp[16];
+
 	std::deque<Block> *p = isKey ? &key : &message; // get the reference to either the message of the key.
     p->clear(); // empty the key/message.
 	std::deque<unsigned char> bytes(s.begin(), s.end()); // convert the string to an unsigned char queue.
@@ -74,22 +75,25 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
     n = nbBlocks;
 	while (nbBlocks-- > 0) {
 		for (int i = 0; i < 16; i++) {
-			if (bytes.size() > 0) {
-				temp[i] = bytes.front();
-				bytes.pop_front();
-			} else { // If the queue is empty, fill the rest of the block with 0s.
-				temp[i] = 0x00;
-			}
-		}
-		(*p).push_back(Block(temp)); // Push the block
+            if (bytes.size() > 0) {
+                temp[i] = bytes.front();
+                bytes.pop_front();
+            } else { // If the queue is empty, fill the rest of the block with 0s.
+                temp[i] = 0x00;
+            }
+        }
+        Block new_block(temp);
+		(*p).push_back(new_block); // Push the block
 	}
 	return true; // return the success status. (the method might end up being void)
 }
 
 /*inline*/ void Encryptor::subBytes() {
 	for (auto iter: message) {
-		for (int i = 0; i < 16; i++) {
-			iter.state[0][i] = tableLookup(iter.state[0][i], false);
+		for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                iter.state[i][j] = tableLookup(iter.state[i][j], false);
+            }
 		}
 	}
 }
@@ -146,8 +150,10 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 
 /*inline*/ void Encryptor::invSubBytes() {
 	for (auto iter: message) {
-		for (int i = 0; i < 16; i++) {
-			iter.state[0][i] = tableLookup(iter.state[0][i], true);
+		for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                iter.state[i][j] = tableLookup(iter.state[i][j], true);
+            }
 		}
 	}
 }
