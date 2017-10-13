@@ -145,6 +145,10 @@ void Controller::encrypt(std::vector<std::string>& args) {
                 readFromFile = true;
             } else if (s == "-r" || s == "--rawtext") {
                 rawText = true;
+            } else if (!s.find('-')){
+                // It is an invalid flag!
+                std::cout << "Invalid option: " << s << '\n';
+                return;
             } else {
                 message = s;
             }
@@ -204,6 +208,10 @@ void Controller::decrypt(std::vector<std::string> &args) {
                 useBuffer = true;
                 readFromFile = false;
                 rawText = false;
+            } else if (!s.find('-')){
+                // It is an invalid flag!
+                std::cout << "Invalid option: " << s << '\n';
+                return;
             } else {
                 message = s;
             }
@@ -257,6 +265,10 @@ void Controller::setKey(std::vector<std::string> &args) {
             if (s == "-r" || s == "--random") {
                 gen_rand = true;
                 // Generate random key
+            } else if (!s.find('-')){
+                // It is an invalid flag!
+                std::cout << "Invalid option: " << s << '\n';
+                return;
             } else {
                 key = s;
                 use_arg = true;
