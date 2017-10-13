@@ -4,6 +4,7 @@
 #include <deque>
 #include <string>
 #include "AESUtils.h"
+#include <memory>
 
 class Encryptor {
 public:
@@ -25,12 +26,12 @@ public:
 	std::string getKey();
     bool parseString(std::string s, bool isKey, int& n);
     void printMessage();
-    std::deque<Block*> getMessage();
+    std::deque<std::shared_ptr<Block>> getMessage();
 private:
 	std::string key_string;
 	int rounds = 10; // will change eventually
-	std::deque<Block*> message;
-	std::deque<Block*> key;
+	std::deque<std::shared_ptr<Block>> message;
+	std::deque<std::shared_ptr<Block>> key;
 	std::string generateRandomKey(); // Will require libSodium or another external library for good random numbers.
 	// inline all the things!
 	// operations.

@@ -6,7 +6,7 @@
 #include <algorithm>
 #include "Controller.h"
 
-// TODO: DUMB IDEA HUEHUEHUE
+// TODO: DUMB IDEA HEHE
 // Have a constexpr dictionary of command help messages
 // So whenever the --help option is passed to a command,
 // the help message has been fetched at compile time and is ready
