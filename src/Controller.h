@@ -17,7 +17,6 @@ public:
     void start();
 private:
     void init();
-    static Encryptor en;
     std::string outputDir;
     bool verbose;
 
@@ -26,28 +25,28 @@ private:
     std::vector<std::string> getInput();
     // command methods
     static void clearKey(std::vector<std::string>& args);
-    static void setKey(std::vector<std::string>& args);
-    static void getKey(std::vector<std::string> &args);
-    static void setMessage(std::vector<std::string>& args); // 0: raw text, 1: file
-    static void getMessage(std::vector<std::string>& args);
+    static void setKey(const std::vector<std::string>& args);
+    static void getKey(const std::vector<std::string> &args);
+    static void setMessage(const std::vector<std::string>& args); // 0: raw text, 1: file
+    static void getMessage(const std::vector<std::string>& args);
     static void clearMessage(std::vector<std::string>& args);
     static void setOutputDir(std::vector<std::string>& args);
-    static void encrypt(std::vector<std::string>& args);
-    static void decrypt(std::vector<std::string>& args);
+    static void encrypt(const std::vector<std::string>& args);
+    static void decrypt(const std::vector<std::string>& args);
     // Printing methods
     static void printHeader();
-    static void printHelp(std::vector<std::string>& args);
+    static void printHelp();
     void printMessage();
 
     // TODO: implement a way to read multiple options after a single '-' ex: '-rv' instead of '-r -v' (read from file + verbose)
 
-    typedef void (*commandFunction)(std::vector<std::string>&);
+    using Args = const std::vector<std::string>&;
+    typedef void (*commandFunction)(Args);
 
     struct Command {
-        Command() : name(""), func(nullptr){};
         Command(std::string n, commandFunction f) : name(n), func(f) {};
-        std::string name;
-        commandFunction func;
+        const std::string name;
+        const commandFunction func;
     };
 
     std::vector<Command> commands;

@@ -1,5 +1,3 @@
-#include <iostream>
-#include <vector>
 #include "Encryptor.h"
 
 void Encryptor::encrypt(std::string s, bool verbose) {
@@ -88,7 +86,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 	return true; // return the success status. (the method might end up being void)
 }
 
-/*inline*/ void Encryptor::subBytes() {
+void Encryptor::subBytes() {
 	for (auto& iter: message) {
 		for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -98,7 +96,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 	}
 }
 
-/*inline*/ void Encryptor::shiftRows() {
+void Encryptor::shiftRows() {
 	unsigned char temp;
 	for (auto& iter: message) {
 		temp = iter.state[1][0];
@@ -123,7 +121,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 	}
 }
 
-/*inline*/ void Encryptor::mixColumns() {
+void Encryptor::mixColumns() {
 	/*
 	|s'1| = |2	3	1	1| |s1|
 	|s'2|   |1	2	3	1| |s2|
@@ -148,7 +146,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 	}
 }
 
-/*inline*/ void Encryptor::invSubBytes() {
+void Encryptor::invSubBytes() {
 	for (auto& iter: message) {
 		for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -158,7 +156,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 	}
 }
 
-/*inline*/ void Encryptor::invShiftRows() {
+void Encryptor::invShiftRows() {
 	unsigned char temp;
 	for (auto& iter: message) {
 		temp = iter.state[1][3];
@@ -183,7 +181,7 @@ bool Encryptor::parseString(std::string s, bool isKey, int& n) {
 	}
 }
 
-/*inline*/ void Encryptor::invMixColumns() {
+void Encryptor::invMixColumns() {
 	/*
     |s'1| = |0e	0b	0d	09| |s1|
     |s'2|   |09	0e	0b	0d| |s2|
@@ -236,7 +234,7 @@ bool Encryptor::generateSubKeys() {
 				newKey[j][k] = col4PrevKey[k];
 			}
 		}
-		key.push_back(Block(newKey));
+		key.emplace_back(Block(newKey));
 	}
     std::cout << "Key expansion:" << "\n";
     printStringFromDeque(true);
@@ -245,7 +243,7 @@ bool Encryptor::generateSubKeys() {
 
 void Encryptor::printStringFromDeque(bool isKey) {
     std::deque<Block> *p = isKey ? &key : &message;
-    std::string ret = "";
+    std::string ret;
     for (auto iter: *p) {
         ret += iter.toString();
         if (isKey)

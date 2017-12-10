@@ -12,8 +12,6 @@
 // the help message has been fetched at compile time and is ready
 // to be displayed
 
-Encryptor Controller::en;
-
 Controller::Controller(): outputDir(""), verbose(false) {
     init();
 }
@@ -21,16 +19,24 @@ Controller::Controller(): outputDir(""), verbose(false) {
 Controller::~Controller() {}
 
 void Controller::init() {
-    Command helpcom("help", printHelp);
+    // Wrap methods that don't take arguments with lambdas that don't use the argument
+    Command helpcom("help", [](Args args) {
+        printHelp();
+    });
     Command enccom("encrypt", encrypt);
     Command deccom("decrypt", decrypt);
     Command setkey("setkey", setKey);
     Command getkey("getkey", getKey);
+//    Command printmessage("printmessage", [](Args args) {
+//        printMessage();
+//    });
+
     commands.push_back(helpcom);
     commands.push_back(enccom);
     commands.push_back(deccom);
     commands.push_back(setkey);
     commands.push_back(getkey);
+//    commands.push_back(printmessage);
 }
 
 void Controller::start() {
@@ -44,7 +50,7 @@ void Controller::process() {
     while (!exit_loop) {
         input.clear(); // clear vector
         input = getInput();
-        if (input.size() > 0) {
+        if (!input.empty()) {
             parseCommand(input);
         }
 
@@ -75,9 +81,7 @@ void Controller::parseCommand(std::vector<std::string> &in) {
     std::string commandName;
     commandName = in.at(0);
 
-    if (commandName == "printmessage") {
-        printMessage();
-    } else if (commandName == "clear") {
+    if (commandName == "clear") {
         std::cout << std::string( 100, '\n' ); // lol
     } else if (commandName == "exit") {
         std::cout << "See ya!" << '\n';
@@ -85,6 +89,9 @@ void Controller::parseCommand(std::vector<std::string> &in) {
         auto command = std::find_if(commands.begin(), commands.end(),
                                     [commandName](const Command& c){ return c.name == commandName; });
         if (command != commands.end()) {
+
+            // TODO: try binding the function here, passing the argument in
+
             command->func(in); // pass the input to the command's method for args.
         } else {
             std::cout << "Command not found, type \"help\" for information." << '\n';
@@ -102,7 +109,7 @@ void Controller::printHeader() {
               << '\n';
 }
 
-void Controller::printHelp(std::vector<std::string>& args) {
+void Controller::printHelp() {
     printHeader();
     std::cout << '\n'
               << "Command list:\n"
@@ -125,10 +132,12 @@ void Controller::printHelp(std::vector<std::string>& args) {
 }
 
 void Controller::printMessage() {
+    Encryptor& en = Encryptor::getInstance();
     en.printMessage();
 }
 
-void Controller::encrypt(std::vector<std::string>& args) {
+void Controller::encrypt(const std::vector<std::string>& args) {
+    Encryptor& en = Encryptor::getInstance();
     bool verbose = false;
     bool readFromFile = false;
     bool rawText = false;
@@ -137,7 +146,7 @@ void Controller::encrypt(std::vector<std::string>& args) {
     int nb_lines = 0;
     int nb_blocks = 0;
 
-    for (auto s : args) {
+    for (const auto& s : args) {
         if (s != args.at(0)) {
             if (s == "-v" || s == "--verbose") {
                 verbose = true;
@@ -154,12 +163,6 @@ void Controller::encrypt(std::vector<std::string>& args) {
             }
         }
     }
-
-    // Not too sure about that one
-    /*if (!s) {
-        std::cout << "No message or file to encrypt!" << '\n';
-        return;
-    }*/
 
     if (readFromFile != !rawText) {
         std::cout << "Can't use raw text and read from file at the same time!" << '\n';
@@ -186,7 +189,8 @@ void Controller::encrypt(std::vector<std::string>& args) {
     }
 }
 
-void Controller::decrypt(std::vector<std::string> &args) {
+void Controller::decrypt(const std::vector<std::string> &args) {
+    Encryptor& en = Encryptor::getInstance();
     bool verbose = false;
     bool readFromFile = false;
     bool rawText = false;
@@ -196,7 +200,7 @@ void Controller::decrypt(std::vector<std::string> &args) {
     int nb_lines = 0;
     int nb_blocks = 0;
 
-    for (auto s : args) {
+    for (const auto& s : args) {
         if (s != args.at(0)) {
             if (s == "-v" || s == "--verbose") {
                 verbose = true;
@@ -217,12 +221,6 @@ void Controller::decrypt(std::vector<std::string> &args) {
             }
         }
     }
-
-    // Not too sure about that one
-    /*if (!s) {
-        std::cout << "No message or file to encrypt!" << '\n';
-        return;
-    }*/
 
     if ((readFromFile != !rawText) && !useBuffer) {
         std::cout << "Can't use raw text and read from file at the same time!" << '\n';
@@ -255,12 +253,13 @@ void Controller::decrypt(std::vector<std::string> &args) {
     }
 }
 
-void Controller::setKey(std::vector<std::string> &args) {
+void Controller::setKey(const std::vector<std::string> &args) {
+    Encryptor& en = Encryptor::getInstance();
     std::string key;
     bool gen_rand = false;
     bool use_arg = false;
 
-    for (auto s : args) {
+    for (const auto& s : args) {
         if (s != args.at(0)) {
             if (s == "-r" || s == "--random") {
                 gen_rand = true;
@@ -284,10 +283,11 @@ void Controller::setKey(std::vector<std::string> &args) {
     if (use_arg) {
         en.setKey(key);
     } else if (gen_rand) {
-        //...
+        // TODO
     }
 }
 
-void Controller::getKey(std::vector<std::string> &args) {
+void Controller::getKey(const std::vector<std::string> &args) {
+    Encryptor& en = Encryptor::getInstance();
     en.printStringFromDeque(true);
 }

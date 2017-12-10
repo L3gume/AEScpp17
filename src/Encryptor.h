@@ -3,11 +3,13 @@
 
 #include <deque>
 #include <string>
+#include <iostream>
+#include <vector>
 #include "AESUtils.h"
 
 class Encryptor {
 public:
-	// singleton class stuff, we only want one encryptor. (probably useless)
+	// singleton class stuff, we only want one encryptor.
 	static Encryptor& getInstance() {
 		static Encryptor instance;
 		return instance;
@@ -29,21 +31,20 @@ public:
 private:
 	std::string key_string;
 
-	const int rounds = 10; // will change eventually
+	const unsigned int rounds = 10; // will change eventually
 	std::deque<Block> message;
 	std::deque<Block> key;
 	std::string generateRandomKey(); // Will require libSodium or another external library for good random numbers.
 	// inline all the things!
 	// operations.
 
-    // turns out inlining these methods doesn't really make anything faster.
-	/*inline*/ void subBytes();
-    /*inline*/ void shiftRows();
-    /*inline*/ void mixColumns();
+    void subBytes();
+    void shiftRows();
+    void mixColumns();
 	// inverse operations.
-    /*inline*/ void invSubBytes();
-    /*inline*/ void invShiftRows();
-    /*inline*/ void invMixColumns();
+    void invSubBytes();
+    void invShiftRows();
+    void invMixColumns();
 	// addRoundKey is just a XOR, which is its own inverse.
 	inline void addRoundKey(unsigned int round) {
 		for (auto& value: message) {
